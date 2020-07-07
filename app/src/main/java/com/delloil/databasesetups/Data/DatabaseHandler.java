@@ -63,7 +63,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		//Insert to row
 		db.insert(Util.TABLE_NAME, null, values);
 
-		Log.d("DBHandler", "addContact: " + "item added");
+		Log.d(Util.TAG, "addContact: " + "item added");
 		db.close(); //closing db connection!
 
 
@@ -79,14 +79,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				Util.KEY_ID +"=?",new String[]{String.valueOf(id)},
 				null, null, null);
 
-		if (cursor != null)
+		if (cursor != null){
 			cursor.moveToFirst();
+		}
 
-		Contact contact = new Contact("James", "213986");
+		Contact contact = new Contact();
 		contact.setId(Integer.parseInt(cursor.getString(0)));
 		contact.setName(cursor.getString(1));
 		contact.setPhoneNumber(cursor.getString(2));
-
+		db.close();
 		return contact;
 	}
 
@@ -103,7 +104,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		//Loop through our data
 		if (cursor.moveToFirst()) {
 			do {
-				Contact contact = new Contact("James", "213986");
+				Contact contact = new Contact();
 				contact.setId(Integer.parseInt(cursor.getString(0)));
 				contact.setName(cursor.getString(1));
 				contact.setPhoneNumber(cursor.getString(2));
@@ -112,22 +113,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				contactList.add(contact);
 			}while (cursor.moveToNext());
 		}
-
+		db.close();
 		return contactList;
 	}
 
 	//Update contact
 	public int updateContact(Contact contact) {
 		SQLiteDatabase db = this.getWritableDatabase();
+		int rowUpdated;
 
 		ContentValues values = new ContentValues();
 		values.put(Util.KEY_NAME, contact.getName());
 		values.put(Util.KEY_PHONE_NUMBER, contact.getPhoneNumber());
 
+
 		//update the row
 		//update(tablename, values, where id = 43)
-		return db.update(Util.TABLE_NAME, values, Util.KEY_ID + "=?",
+		rowUpdated= db.update(Util.TABLE_NAME, values, Util.KEY_ID + "=?",
 				new String[]{String.valueOf(contact.getId())});
+		db.close();
+		return rowUpdated;
 	}
 
 	//Delete single contact
@@ -142,11 +147,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	//Get contacts count
 	public int getCount() {
+		int dataCount;
 		String countQuery = "SELECT * FROM " + Util.TABLE_NAME;
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(countQuery, null);
-
-		return cursor.getCount();
+		dataCount = cursor.getCount();
+		db.close();
+		return dataCount;
 
 	}
 }

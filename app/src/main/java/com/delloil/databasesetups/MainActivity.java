@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
 		getCountOfData(db);
 
 		//gets one contact
-		getAContactData(db);
+		//getAContactData(db);
 
 		//delete a contact
-		deleteAContactData(db);
-		Log.d(Util.TAG, "after deleting");
-		getAllContactDetails(db);
+		//deleteAContactData(db);
+		//Log.d(Util.TAG, "after deleting");
+		//getAllContactDetails(db);
 
 		//update a contact
 		updateContactData(db);
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 		Contact updateContact = new Contact();
 		updateContact.setId(1);
-		updateContact.setName("New Name for 1");
+		updateContact.setName("New Name for "+Math.random());
 		db.updateContact(updateContact);
 
 
